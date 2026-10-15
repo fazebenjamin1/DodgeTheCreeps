@@ -41,3 +41,6 @@ __meta__ = {
 }
 
 [connection signal="body_entered" from="." to="." method="_on_Player_body_entered"]
+[connection signal="hit" from="." to="." method="new_game"]
+[connection signal="hit" from="." to="." method="game_over"]
+[connection signal="hit" from="." to="." method="_on_Player_hit"]

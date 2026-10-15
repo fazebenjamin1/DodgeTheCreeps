@@ -2,6 +2,7 @@ extends Area2D
 signal hit
 export var speed = 400 # A quina velocitat es mourà el jugador (píxels/seg).
 var screen_size # Mida de la finestra de joc.
+var score=0
 
 func _ready():
 	screen_size = get_viewport_rect().size
@@ -43,5 +44,14 @@ func start(pos):
 	position = pos
 	show()
 	$CollisionShape2D.disabled = false
-
-
+	
+func game_over():
+	$ScoreTimer.stop()
+	$MobTimer.stop()
+func new_game():
+	score = 0
+	$Player.start($StartPosition.position)
+	$StartTimer.start()
+	
+func _on_Player_hit():
+	pass # Replace with function body.
