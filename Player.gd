@@ -4,9 +4,9 @@ export var speed = 400 # A quina velocitat es mourà el jugador (píxels/seg).
 var screen_size # Mida de la finestra de joc.
 var score=0
 
+
 func _ready():
 	screen_size = get_viewport_rect().size
-	
 
 func _process(delta):
 	var velocity = Vector2.ZERO # Vector de moviment del jugador.
@@ -45,13 +45,13 @@ func start(pos):
 	show()
 	$CollisionShape2D.disabled = false
 	
-func game_over():
-	$ScoreTimer.stop()
-	$MobTimer.stop()
-func new_game():
-	score = 0
-	$Player.start($StartPosition.position)
-	$StartTimer.start()
-	
 func _on_Player_hit():
 	pass # Replace with function body.
+
+func _on_ScoreTimer_timeout():
+	score += 1
+	
+func _on_StartTimer_timeout():
+	$MobTimer.start()
+	$ScoreTimer.start()
+
