@@ -27,10 +27,10 @@ animations = [ {
 } ]
 
 [sub_resource type="CapsuleShape2D" id=2]
-radius = 40.0
+radius = 44.0
 height = 0.0
 
-[node name="Mob" type="RigidBody2D"]
+[node name="Mob" type="RigidBody2D" groups=["mobs"]]
 gravity_scale = 0.0
 script = ExtResource( 7 )
 
