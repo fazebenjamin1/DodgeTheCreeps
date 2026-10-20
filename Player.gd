@@ -48,11 +48,3 @@ func start(pos):
 func _on_Player_hit():
 	pass # Replace with function body.
 
-func _on_ScoreTimer_timeout():
-	score += 1
-	$HUD.update_score(score)
-	
-func _on_StartTimer_timeout():
-	$MobTimer.start()
-	$ScoreTimer.start()
-
