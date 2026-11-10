@@ -25,7 +25,7 @@ func _on_MobTimer_timeout():
 	direction += rand_range(-PI / 4, PI / 4)
 	mob.rotation = direction
 	# Tria la velocitat de la multitud.
-	var velocity = Vector2(rand_range(150.0, 250.0), 0.0)
+	var velocity = Vector2(rand_range(150.0, 250.0) * Global.mob_speed_mult[Global.difficulty], 0.0)
 	mob.linear_velocity = velocity.rotated(direction)
 	# Va fer que la multitud s'afegís a l'escena principal.
 	add_child(mob)
@@ -61,10 +61,18 @@ func new_game():
 		$Player2.start($StartPosition2.position)
 	else:
 		$Player2.disable() # Mode single player: el segon jugador no existeix.
+	if Global.zen_mode:
+		# Mode Zen: sense col·lisions, ningú pot morir.
+		$Player1/CollisionShape2D.set_deferred("disabled", true)
+		$Player2/CollisionShape2D.set_deferred("disabled", true)
+	$MobTimer.wait_time = Global.mob_wait_time[Global.difficulty]
 	$StartTimer.start()
 	$HUD.update_score1(score1)
 	$HUD.update_score2(score2)
-	$HUD.show_message("Get Ready")
+	if Global.zen_mode:
+		$HUD.show_message("Zen mode")
+	else:
+		$HUD.show_message("Get Ready")
 	$Music.play()
 
 func _input(event):
@@ -73,6 +81,8 @@ func _input(event):
 		get_tree().change_scene("res://Menu.tscn")
 
 func _on_ScoreTimer_timeout():
+	if Global.zen_mode:
+		return # Mode Zen: no hi ha puntuació.
 	# Cada jugador només suma mentre està viu.
 	if alive1:
 		score1 += 1
