@@ -11,8 +11,12 @@ config_version=4
 [application]
 
 config/name="DodgeTheCreeps"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://Menu.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Global="*res://global.gd"
 
 [display]
 

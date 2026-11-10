@@ -1,20 +1,25 @@
 extends CanvasLayer
 signal start_game
 
+func _ready():
+	# En single player només es veu el primer marcador.
+	$ScoreLabel2.visible = (Global.num_players == 2)
+
 func show_message(text):
 	$Message.text = text
 	$Message.show()
 	$MessageTimer.start()
 
 func show_game_over(score1, score2):
-	var result
-	if score1 > score2:
-		result = "P1 wins!"
-	elif score2 > score1:
-		result = "P2 wins!"
-	else:
-		result = "Draw!"
-	show_message("Game Over\n" + result)
+	var text = "Game Over"
+	if Global.num_players == 2:
+		if score1 > score2:
+			text += "\nP1 wins!"
+		elif score2 > score1:
+			text += "\nP2 wins!"
+		else:
+			text += "\nDraw!"
+	show_message(text)
 	# Espereu fins que el MessageTimer hagi acabat de comptar.
 	yield($MessageTimer, "timeout")
 	$Message.text = "Dodge the\nCreeps!"

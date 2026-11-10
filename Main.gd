@@ -55,14 +55,22 @@ func new_game():
 	score1 = 0
 	score2 = 0
 	alive1 = true
-	alive2 = true
+	alive2 = (Global.num_players == 2)
 	$Player1.start($StartPosition1.position)
-	$Player2.start($StartPosition2.position)
+	if Global.num_players == 2:
+		$Player2.start($StartPosition2.position)
+	else:
+		$Player2.disable() # Mode single player: el segon jugador no existeix.
 	$StartTimer.start()
 	$HUD.update_score1(score1)
 	$HUD.update_score2(score2)
 	$HUD.show_message("Get Ready")
 	$Music.play()
+
+func _input(event):
+	# Escape torna al menú.
+	if event.is_action_pressed("ui_cancel"):
+		get_tree().change_scene("res://Menu.tscn")
 
 func _on_ScoreTimer_timeout():
 	# Cada jugador només suma mentre està viu.
