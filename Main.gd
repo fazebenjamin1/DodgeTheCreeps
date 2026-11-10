@@ -1,9 +1,14 @@
 extends Node
 export(PackedScene) var mob_scene
-var score
+var score1 = 0
+var score2 = 0
+var alive1 = true
+var alive2 = true
 
 func _ready():
 	randomize()
+	$Player1.connect("hit", self, "_on_Player1_hit")
+	$Player2.connect("hit", self, "_on_Player2_hit")
 	new_game()
 
 func _on_MobTimer_timeout():
@@ -24,26 +29,50 @@ func _on_MobTimer_timeout():
 	mob.linear_velocity = velocity.rotated(direction)
 	# Va fer que la multitud s'afegís a l'escena principal.
 	add_child(mob)
-	
+
+func _on_Player1_hit():
+	alive1 = false
+	check_game_over()
+
+func _on_Player2_hit():
+	alive2 = false
+	check_game_over()
+
+func check_game_over():
+	# La partida acaba quan han mort tots dos.
+	if not alive1 and not alive2:
+		game_over()
+
 func game_over():
 	$ScoreTimer.stop()
 	$MobTimer.stop()
 	get_tree().call_group("mobs", "queue_free")
 	$Music.stop()
-	$DeathSound.play() 
-	
+	$DeathSound.play()
+	$HUD.show_game_over(score1, score2)
+
 func new_game():
-	score = 0
-	$Player.start($StartPosition.position)
+	score1 = 0
+	score2 = 0
+	alive1 = true
+	alive2 = true
+	$Player1.start($StartPosition1.position)
+	$Player2.start($StartPosition2.position)
 	$StartTimer.start()
-	$HUD.update_score(score)
+	$HUD.update_score1(score1)
+	$HUD.update_score2(score2)
 	$HUD.show_message("Get Ready")
 	$Music.play()
 
 func _on_ScoreTimer_timeout():
-	score += 1
-	$HUD.update_score(score)
-	
+	# Cada jugador només suma mentre està viu.
+	if alive1:
+		score1 += 1
+		$HUD.update_score1(score1)
+	if alive2:
+		score2 += 1
+		$HUD.update_score2(score2)
+
 func _on_StartTimer_timeout():
 	$MobTimer.start()
 	$ScoreTimer.start()
